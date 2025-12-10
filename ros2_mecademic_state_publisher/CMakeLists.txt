@@ -21,32 +21,26 @@ find_package(urdfdom_headers REQUIRED)
 find_package(kdl_parser REQUIRED)
 find_package(tf2_ros REQUIRED)
 
+include_directories(include)
 include_directories(SYSTEM ${Eigen_INCLUDE_DIRS})
-include_directories(
-  include
-  ${geometry_msgs_INCLUDE_DIRS}
-  ${kdl_parser_INCLUDE_DIRS}
-  ${orocos_kdl_INCLUDE_DIRS}
-  ${urdf_INCLUDE_DIRS}
-  ${urdfdom_headers_INCLUDE_DIRS}
-  ${rclcpp_INCLUDE_DIRS}
-  ${sensor_msgs_INCLUDE_DIRS}
-  ${tf2_ros_INCLUDE_DIRS})
 
 add_library(
   ${PROJECT_NAME}_solver
   src/robot_state_publisher.cpp)
-link_directories(${orocos_kdl_LIBRARY_DIRS})
 target_link_libraries(
   ${PROJECT_NAME}_solver
-  ${geometry_msgs_LIBRARIES}
-  ${kdl_parser_LIBRARIES}
   ${orocos_kdl_LIBRARIES}
-  ${rclcpp_LIBRARIES}
-  ${sensor_msgs_LIBRARIES}
-  ${tf2_ros_LIBRARIES}
-  ${urdf_LIBRARIES}
-  ${urdfdom_LIBRARIES})
+)
+ament_target_dependencies(
+  ${PROJECT_NAME}_solver
+  geometry_msgs
+  kdl_parser
+  rclcpp
+  sensor_msgs
+  tf2_ros
+  urdf
+  urdfdom_headers
+)
 
 add_library(
   joint_state_listener
@@ -54,7 +48,17 @@ add_library(
 target_link_libraries(
   joint_state_listener
   ${PROJECT_NAME}_solver
-  ${orocos_kdl_LIBRARIES})
+  ${orocos_kdl_LIBRARIES}
+)
+ament_target_dependencies(
+  joint_state_listener
+  kdl_parser
+  rclcpp
+  sensor_msgs
+  urdf
+  geometry_msgs
+  tf2_ros
+)
 
 add_executable(
   ${PROJECT_NAME}
@@ -63,11 +67,15 @@ target_link_libraries(
   ${PROJECT_NAME}
   joint_state_listener
   ${orocos_kdl_LIBRARIES}
-  ${kdl_parser_LIBRARIES}
-  ${urdf_LIBRARIES}
-  ${rclcpp_LIBRARIES}
-  ${tf2_ros_LIBRARIES}
-  ${sensor_msgs_LIBRARIES})
+)
+ament_target_dependencies(
+  ${PROJECT_NAME}
+  kdl_parser
+  urdf
+  rclcpp
+  tf2_ros
+  sensor_msgs
+)
 
 install(
   TARGETS

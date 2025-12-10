@@ -1,0 +1,10 @@
+moveit_setup_assistant_config:
+  urdf:
+    package: ros2_mecademic_description
+    relative_path: urdf/meca_500_r3.urdf
+  srdf:
+    relative_path: config/meca_500_r3.srdf
+  package_settings:
+    author_name: edwin
+    author_email: to@gmail.com
+    generated_timestamp: 1765391229
